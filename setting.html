@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SCQ</title>
+  </head>
+
+  <body>
+    <div>
+      <div id="cont"></div>
+    </div>
+    <style>
+      .setting_span {
+        border-bottom: 1px solid #ddd;
+        margin: 15px;
+      }
+
+      .setting_span label {
+        /* width: 100px; */
+        display: inline-block;
+        text-align: right;
+      }
+      .desc {
+        /* display: flex; */
+        /* justify-content: space-around; */
+      }
+
+      .desc div {
+        margin-right: 30px;
+      }
+
+      .setting_span > div {
+        margin-bottom: 15px;
+      }
+      .param-wrap {
+          /* border: 1px solid #ddd; */
+          /* padding: 5px; */
+          /* border-bottom: 0; */
+          /* margin-top: -1px; */
+      }
+      input[type="checkbox" i] {
+        width: 26px;
+        height: 26px;
+      }
+      input,select {
+          background-color: #5a5a5a;
+          border: 0;
+          /* line-height: 20px; */
+          color: white;
+          padding: 5px;
+          border-radius: 1px;
+          margin: 5px 0;
+      }
+      button.send {
+          border: 0;
+          padding: 5px 15px;
+          border-radius: 2px;
+          font-size: 16px;
+          font-weight: 600;
+          color: black;
+          background-color: white;
+          margin-left: 15px;
+          margin-bottom: 20px;
+          cursor: pointer;
+      }
+    </style>
+    <button class="send">4、开始生成</button>
+    <script>
+      function jsUcfirst(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+      }
+
+      function convert(under_score) {
+        let splitArr = under_score.split("_");
+        let camelCase = "";
+        let PascalCase = "";
+        let UNDER_SCORE = "";
+        let dashStyle = ""; // a-b 常用于路径
+
+        for (let index = 0; index < splitArr.length; index++) {
+          const element = splitArr[index];
+
+          if (index === 0) {
+            camelCase += element;
+            dashStyle += element;
+          } else {
+            let firstNotUp = jsUcfirst(element);
+            camelCase = camelCase + firstNotUp;
+            dashStyle = dashStyle + "-" + element;
+          }
+          let firstUp = jsUcfirst(element);
+          PascalCase = PascalCase + firstUp;
+
+          let allUp = element;
+          UNDER_SCORE = UNDER_SCORE + "_" + allUp.toUpperCase();
+        }
+        UNDER_SCORE = UNDER_SCORE.slice(1);
+
+        return {
+          under_score,
+          camelCase,
+          UNDER_SCORE,
+          PascalCase,
+          dashStyle
+        };
+      }
+      const vscode = acquireVsCodeApi();
+
+      let arr = PARAM_FROM_EXTENSION;
+      var str = ``;
+      for (var sd in arr) {
+        // str += `<div><label name="${sd}">${sd}</label><input class="templateType" type="checkbox" key="${sd}" class='paramValue' data-type='${sd}' />`;
+
+        // str += `</div>`
+        str += `<div class="setting_span">
+            <h1>
+              <label for="">2、选择目录：${sd}</label>
+              <input class="templateType" type="checkbox" key="${sd}" class='paramValue' data-type='${sd}' />
+            </h1>
+            <h2>3、填写变量</h2> `;
+        for (const key in arr[sd]) {
+          if (arr[sd].hasOwnProperty(key)) {
+            const element = arr[sd][key];
+            // str += `<div><span>${element["DESC"]}（${
+            //     element["TYPE"]
+            // }）：</span><label>${key}</label><input class='paramValue' data-type='${
+            //   element["TYPE"]
+            // }' data-base='${element["BASE"]}' data-from='${
+            //   element["FROM"]
+            // }' data-key='${
+            //   key
+            // }'/></div>`;
+            
+            str += `
+                <div class="param-wrap">
+                    <h3>${element["DESC"]}</h3>
+                  <div class="desc">
+                          <div style="display:${element["FROM"]?'inherit':'none'}">
+                              <label for="">变量命名约束：</label>
+                              
+                              <select data-key='${key}'>
+                                <option ${element["TYPE"]=='camelCase'?'selected':''}>camelCase</option>
+                                <option ${element["TYPE"]=='PascalCase'?'selected':''}>PascalCase</option>
+                                <option ${element["TYPE"]=='UNDER_SCORE'?'selected':''}>UNDER_SCORE</option>
+                                <option ${element["TYPE"]=='dashStyle'?'selected':''}>dashStyle</option>
+                                <option ${element["TYPE"]=='under_score'?'selected':''}>under_score</option>
+                              </select>
+                          </div>
+                          <div>
+                              <label for="">占位符：</label>
+                              <span>${key}</span>
+                          </div>
+                          ${
+                            element["BASE"]?`<div><label for="">原始生成参数 ${element["BASE"]}</label></div>`:''
+                          }
+                          ${element["FROM"]?`<div><label for="">根据 ${element["FROM"]}参数自动生成</label></div>`:''}
+                          
+                      </div>
+                      <div>
+                          
+                          <input class='paramValue' data-type='${
+                            element["TYPE"]
+                          }' data-base='${element["BASE"]}' data-from='${
+                  element["FROM"]
+                }' data-key='${key}' data-floder='${sd}' placeholder='输入填充值'/>
+                      </div>
+                </div>
+                `;
+          }
+        }
+        str += `</div>`;
+      }
+
+      document.getElementById("cont").innerHTML = str;
+      let s = document.querySelectorAll(".paramValue");
+
+      for (let index = 0; index < s.length; index++) {
+        const element = s[index];
+        element.addEventListener("change", function(event) {
+          for (let c = 0; c < s.length; c++) {
+            const e = s[c];
+            if (e.dataset.from && e.dataset.from != "undefined") {
+              let base = document.querySelector(
+                `input[data-base='${e.dataset.from}']`
+              );
+              if (base) {
+                // 类型转换
+                let currentType =  document.querySelector(`select[data-key='${e.dataset.key}']`)
+                e.value = convert(base.value)[currentType.value];
+              }
+            }
+          }
+        });
+      }
+
+      let send = document.getElementsByClassName("send")[0];
+      send.addEventListener("click", function() {
+        let allInput = document.getElementsByClassName("paramValue");
+        let templateType = document.getElementsByClassName("templateType");
+        console.log("send")
+
+        let typeArr = [];
+        for (let index = 0; index < templateType.length; index++) {
+          const element = templateType[index];
+          if (element.checked) {
+            typeArr.push(element.dataset.type);
+          }
+        }
+
+        let obj = {};
+        for (let index = 0; index < allInput.length; index++) {
+          const element = allInput[index];
+          if(!obj[element.dataset.floder]){
+            obj[element.dataset.floder] = {}
+          }
+          obj[element.dataset.floder][element.dataset.key] = element.value;
+        }
+        
+        vscode.postMessage({
+          command: "setting",
+          text: JSON.stringify(obj),
+          type: typeArr
+        });
+      });
+    </script>
+  </body>
+</html>

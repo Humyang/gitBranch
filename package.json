@@ -1,0 +1,100 @@
+{
+  "name": "vscode",
+  "publisher": "humyang",
+  "displayName": "vscode",
+  "description": "",
+  "version": "0.1.0",
+  "engines": {
+    "vscode": "^1.32.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onView:gitBranch"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "gitBranch.helloWorld",
+        "title": "按钮"
+      },
+      {
+				"command": "gitBranch.copyShaToClipboard",
+				"title": "Copy Commit ID to Clipboard",
+				"icon": {
+					"dark": "images/dark/icon-copy-commit.svg",
+					"light": "images/light/icon-copy-commit.svg"
+				}
+			}
+    ],
+    "views": {
+      "gitBranch": [
+        {
+          "id": "gitBranch",
+          "name": "视图名称"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "gitBranch",
+          "title": "侧边栏名称",
+          "icon": "media/dep.svg"
+        }
+      ]
+    },
+    "menus": {
+      "commandPalette": [
+        {
+					"command": "gitBranch.copyShaToClipboard"
+				}
+      ],
+      "view/title": [
+        {
+          "command": "gitBranch.helloWorld",
+          "when": "view == gitBranch",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "gitBranch.helloWorld",
+          "when": "view == gitBranch",
+          "group": "navigation"
+        }
+      ],
+      
+     "explorer/context" : [
+        {
+          "command": "gitBranch.helloWorld",
+          "when": "view == gitBranch",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "webpack --mode production",
+    "compile": "webpack --mode none",
+    "watch": "webpack --mode none --watch",
+    "test-compile": "tsc -p ./",
+    "postinstall": "node ./node_modules/vscode/bin/install",
+    "test": "node ./node_modules/vscode/bin/test"
+  },
+  "devDependencies": {
+    "@types/mocha": "^2.2.42",
+    "@types/node": "^10.12.21",
+    "eslint": "^5.13.0",
+    "ts-loader": "^6.0.2",
+    "typescript": "^3.3.1",
+    "vscode": "^1.1.28",
+    "webpack": "^4.33.0",
+    "webpack-cli": "^3.3.4"
+  },
+  "dependencies": {
+    "fs-extra": "^8.0.1"
+  }
+}
