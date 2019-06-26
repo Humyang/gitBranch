@@ -21,13 +21,13 @@
         "title": "按钮"
       },
       {
-				"command": "gitBranch.copyShaToClipboard",
-				"title": "Copy Commit ID to Clipboard",
-				"icon": {
-					"dark": "images/dark/icon-copy-commit.svg",
-					"light": "images/light/icon-copy-commit.svg"
-				}
-			}
+        "command": "gitBranch.copyShaToClipboard",
+        "title": "Copy Commit ID to Clipboard",
+        "icon": {
+          "dark": "images/dark/icon-copy-commit.svg",
+          "light": "images/light/icon-copy-commit.svg"
+        }
+      }
     ],
     "views": {
       "gitBranch": [
@@ -47,11 +47,6 @@
       ]
     },
     "menus": {
-      "commandPalette": [
-        {
-					"command": "gitBranch.copyShaToClipboard"
-				}
-      ],
       "view/title": [
         {
           "command": "gitBranch.helloWorld",
@@ -64,10 +59,14 @@
           "command": "gitBranch.helloWorld",
           "when": "view == gitBranch",
           "group": "navigation"
+        },
+        {
+          "command": "gitBranch.copyShaToClipboard",
+          "when": "view == gitBranch",
+          "group": "inline"
         }
       ],
-      
-     "explorer/context" : [
+      "explorer/context": [
         {
           "command": "gitBranch.helloWorld",
           "when": "view == gitBranch",
@@ -95,6 +94,7 @@
     "webpack-cli": "^3.3.4"
   },
   "dependencies": {
-    "fs-extra": "^8.0.1"
+    "fs-extra": "^8.0.1",
+    "vscode-helpers": "^4.0.1"
   }
 }
