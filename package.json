@@ -1,7 +1,7 @@
 {
-  "name": "vscode",
+  "name": "git-branch",
   "publisher": "humyang",
-  "displayName": "vscode",
+  "displayName": "gitBranch",
   "description": "",
   "version": "0.1.0",
   "engines": {
@@ -17,8 +17,48 @@
   "contributes": {
     "commands": [
       {
-        "command": "gitBranch.helloWorld",
-        "title": "按钮"
+        "command": "gitBranch.refresh",
+        "title": "刷新"
+      },
+      {
+        "command": "gitBranch.copyBranchName",
+        "title": "Copy Name",
+        "icon": {
+          "dark": "images/dark/icon-copy-commit.svg",
+          "light": "images/light/icon-copy-commit.svg"
+        }
+      },
+      {
+        "command": "gitBranch.branchToMaster",
+        "title": "Meger To Master",
+        "icon": {
+          "dark": "images/dark/icon-push.svg",
+          "light": "images/light/icon-push.svg"
+        }
+      },
+      {
+        "command": "gitBranch.masterToBranch",
+        "title": "Meger From Master",
+        "icon": {
+          "dark": "images/dark/icon-pull.svg",
+          "light": "images/light/icon-pull.svg"
+        }
+      },
+      {
+        "command": "gitBranch.checkoutToBranch",
+        "title": "Checkout",
+        "icon": {
+          "dark": "images/dark/icon-checkout.svg",
+          "light": "images/light/icon-checkout.svg"
+        }
+      },
+      {
+        "command": "gitBranch.deleteBranch",
+        "title": "DELETE",
+        "icon": {
+          "dark": "images/dark/icon-delete.svg",
+          "light": "images/light/icon-delete.svg"
+        }
       },
       {
         "command": "gitBranch.copyShaToClipboard",
@@ -49,28 +89,36 @@
     "menus": {
       "view/title": [
         {
-          "command": "gitBranch.helloWorld",
+          "command": "gitBranch.refresh",
           "when": "view == gitBranch",
           "group": "navigation"
         }
       ],
       "view/item/context": [
         {
-          "command": "gitBranch.helloWorld",
-          "when": "view == gitBranch",
-          "group": "navigation"
-        },
-        {
-          "command": "gitBranch.copyShaToClipboard",
+          "command": "gitBranch.copyBranchName",
           "when": "view == gitBranch",
           "group": "inline"
-        }
-      ],
-      "explorer/context": [
+        },
         {
-          "command": "gitBranch.helloWorld",
+          "command": "gitBranch.branchToMaster",
           "when": "view == gitBranch",
-          "group": "navigation"
+          "group": "inline"
+        },
+        {
+          "command": "gitBranch.masterToBranch",
+          "when": "view == gitBranch",
+          "group": "inline"
+        },
+        {
+          "command": "gitBranch.checkoutToBranch",
+          "when": "view == gitBranch",
+          "group": "inline"
+        },
+        {
+          "command": "gitBranch.deleteBranch",
+          "when": "view == gitBranch",
+          "group": "inline"
         }
       ]
     }

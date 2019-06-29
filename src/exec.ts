@@ -3,11 +3,16 @@ const { execFile } = require('child_process');
 
 import {GitExtension} from "./git.d"
 
+// let gitExtension = null
 
+// let git = null
+const gitExtension = vscode.extensions.getExtension<GitExtension>('vscode.git').exports;
+    const git = gitExtension.getAPI(1);
 export const gitExec = async function(arg){
-  const gitExtension = vscode.extensions.getExtension<GitExtension>('vscode.git').exports;
-  let path = await gitExtension.getGitPath()
-  let respositories = await gitExtension.getRepositories()
+  
+  // git.
+  let path = await git.git.path
+  let respositories = await git.repositories
   var preArgs = [
     `--git-dir=${respositories[0].rootUri.fsPath}/.git/`
   ];

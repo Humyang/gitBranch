@@ -13,8 +13,7 @@ import * as rimraf from "rimraf";
 
 // const vscode_helpers = require("vscode-helpers");
 
-import {gitExec} from "./exec"
-
+import { gitExec } from "./exec";
 
 namespace _ {
   function handleResult<T>(
@@ -176,6 +175,7 @@ export class FileStat implements vscode.FileStat {
 interface Entry {
   uri: vscode.Uri;
   type: vscode.FileType;
+  branch: String
 }
 
 //#endregion
@@ -183,8 +183,8 @@ interface Entry {
 export class FileSystemProvider
   implements vscode.TreeDataProvider<Entry>, vscode.FileSystemProvider {
   private _onDidChangeFile: vscode.EventEmitter<vscode.FileChangeEvent[]>;
-  private _extensionPath: String;
-  constructor(extensionPath: String) {
+  private _extensionPath: string;
+  constructor(extensionPath: string) {
     this._onDidChangeFile = new vscode.EventEmitter<vscode.FileChangeEvent[]>();
     this._extensionPath = extensionPath;
   }
@@ -334,130 +334,106 @@ export class FileSystemProvider
   async commandWorker(args) {
     // const CLIENT = await vscode_helpers.tryCreateGitClient();
     // if (false !== CLIENT) {
-      var preArgs = [
-        `branch`
-      ];
-      // let c = preArgs.concat(args);
-      let c = preArgs;
-      if (args) {
-        c = preArgs.concat(args);
-      }
-      // let c = preArgs.concat(args)
-      // $write(c);
-			// let RES = (await CLIENT.exec(c)).stdOut;
-			let RES = await gitExec(c)
-      let allBranchRaw = RES.toString();
-      //   let res = allBranchRaw
-      let filterStar = allBranchRaw.match(/\S+/g);
-      //   let arr = res.match(/\b/)
-      // "--merged",
-      //   "pre_release"
+    var preArgs = [`branch`];
+    // let c = preArgs.concat(args);
+    let c = preArgs;
+    if (args) {
+      c = preArgs.concat(args);
+    }
+    // let c = preArgs.concat(args)
+    // $write(c);
+    // let RES = (await CLIENT.exec(c)).stdOut;
+    let RES = await gitExec(c);
+    let allBranchRaw = RES.toString();
+    //   let res = allBranchRaw
+    let filterStar = allBranchRaw.match(/\S+/g);
+    //   let arr = res.match(/\b/)
+    // "--merged",
+    //   "pre_release"
 
-      //   $write(`${allBranch.toString()}`);
-      let branchList = filterStar.filter(s => {
-        if (s == "*") {
-          return false;
-        } else {
-          return true;
-        }
-      });
-      return branchList;
+    //   $write(`${allBranch.toString()}`);
+    let branchList = filterStar.filter(s => {
+      if (s == "*") {
+        return false;
+      } else {
+        return true;
+      }
+    });
+    return branchList;
     // } else {
     //   // no git client found
     // }
-	}
-	
-	setOjb(obj, branch, allBranch, arr) {
-		let inPre = [];
-		arr.forEach(element => {
-			let v = allBranch.find(item => {
-				return item === element;
-			});
-			// if (v != branch) {
-				inPre.push(v);
-			// }
-		});
-		inPre.forEach(e => {
-			if (!obj[e]) {
-				obj[e] = {};
-			}
-			obj[e][branch] = true;
-		});
-	}
+  }
+
+  setOjb(obj, branch, allBranch, arr) {
+    let inPre = [];
+    arr.forEach(element => {
+      let v = allBranch.find(item => {
+        return item === element;
+      });
+      // if (v != branch) {
+      inPre.push(v);
+      // }
+    });
+    inPre.forEach(e => {
+      if (!obj[e]) {
+        obj[e] = {};
+      }
+      obj[e][branch] = true;
+    });
+  }
   async getChildren(element?: Entry): Promise<Entry[]> {
-		// gitExec(['--version'])
-		// let allBranch = await this.commandWorker([]);
+    // gitExec(['--version'])
+    // let allBranch = await this.commandWorker([]);
 
-		// console.log("allBranch",allBranch)
-		let allBranch = await this.commandWorker([]);
-		let master = await this.commandWorker(["--merged", "master"]);
-		let pre_release = await this.commandWorker(["--merged", "pre_release"]);
-		let produce = await this.commandWorker(["--merged", "produce"]);
-	
-		let obj = {};
-		this.setOjb(obj, "pre_release", allBranch, pre_release);
-		this.setOjb(obj, "produce", allBranch, produce);
-		this.setOjb(obj, "master", allBranch, master);
-		let arr =[]
-		allBranch.forEach(element => {
-			// $write(JSON.stringify(obj[element]))
-			let inBranch = ""
-			allBranch.forEach(v=>{
-					if(obj[element] && obj[element][v]==true && v!=element){
-							inBranch=inBranch+" "+v+" "
-					}
-			})
-			let status=""
-			if(inBranch){
-				status = `（${inBranch}）`
-			}
-			arr.push({ uri: vscode.Uri.file(path.join("", `${element} ${status}`)), type: vscode.FileType.File })
-			// $writeMarkdown(`## ${element} ${status}`)
-		});
+    // console.log("allBranch",allBranch)
+    let allBranch = await this.commandWorker([]);
 
+    // allBranch.forEach(item=>{
+      
+    let obj = {};
+    for (let index = 0; index < allBranch.length; index++) {
+      const element = allBranch[index];
+      let master = await this.commandWorker(["--merged", element]);
+      
+      this.setOjb(obj, element, allBranch, master);
+    }
+
+    // let obj = {};
+    // for (let index = 0; index < allBranch.length; index++) {
+    //   const element = allBranch[index];
+
+    //   this.setOjb(obj, element, allBranch, element);
+    // }
+    // })
+
+    // let master = await this.commandWorker(["--merged", "master"]);
+    // let pre_release = await this.commandWorker(["--merged", "pre_release"]);
+    // let produce = await this.commandWorker(["--merged", "produce"]);
+
+    // this.setOjb(obj, "pre_release", allBranch, pre_release);
+    // this.setOjb(obj, "produce", allBranch, produce);
+    // this.setOjb(obj, "master", allBranch, master);
+
+    let arr = [];
+    allBranch.forEach(element => {
+      let inBranch = "";
+      allBranch.forEach(v => {
+        if (obj[element] && obj[element][v] == true && v != element) {
+          inBranch = inBranch + " " + v + " ";
+        }
+      });
+      let status = "";
+      if (inBranch) {
+        status = `（${inBranch}）`;
+      }
+      arr.push({
+        uri: vscode.Uri.file(path.join("", `${element} ${status}`)),
+        type: vscode.FileType.File,
+        branch:element
+      });
+    });
     return arr;
-
-    // 获取所有分支
-    // 计算分支状态
-    // if (element) {
-    // 	const children = await this.readDirectory(element.uri);
-    // 	return children.map(([name, type]) => ({ uri: vscode.Uri.file(path.join(element.uri.fsPath, name)), type }));
-    // }
-
-    // const workspaceFolder = vscode.workspace.workspaceFolders.filter(folder => folder.uri.scheme === 'file')[0];
-    // if (workspaceFolder) {
-    // 	let isExsits = await fs_extra.exists(workspaceFolder.uri.fsPath+"/.template");
-    // 	if(!isExsits){
-    // 		// 如果不存在，则将拓展目录下的 .template 目录移动到当前目录
-    // 		let extensionTempalteExsits = await fs_extra.exists(this._extensionPath+"/template")
-    // 		if(extensionTempalteExsits){
-    // 			await fs_e.copy(this._extensionPath+"/template", workspaceFolder.uri.fsPath+"/.template"); //copies directory, even if it has subdirectories or files
-    // 		}
-
-    // 	}
-    // 	console.log('isExsits',isExsits)
-    // 	let stats = fs.lstatSync(workspaceFolder.uri.fsPath+"/.template");
-
-    // 	if (!stats.isDirectory()) {
-    // 		await vscode.window.showErrorMessage("template is not exisited!!");
-    // 		return;
-    // 	}else{
-
-    // 		// 读取项目的 .template 文件夹
-    // 		// 如果有这个目录则读取
-    // 		// 如果没有则初始化默认值
-    // 		let templateUri = vscode.Uri.parse(workspaceFolder.uri.fsPath + "/.template")
-
-    // 		const children = await this.readDirectory(templateUri);
-    // 		children.sort((a, b) => {
-    // 			if (a[1] === b[1]) {
-    // 				return a[0].localeCompare(b[0]);
-    // 			}
-    // 			return a[1] === vscode.FileType.Directory ? -1 : 1;
-    // 		})
-    // 		return children.map(([name, type]) => ({ uri: vscode.Uri.file(path.join(workspaceFolder.uri.fsPath+"/.template", name)), type }));
-    // 	}
-    // }
   }
 
   getTreeItem(element: Entry): vscode.TreeItem {
@@ -475,6 +451,14 @@ export class FileSystemProvider
       };
       treeItem.contextValue = "file";
     }
+    
+    treeItem.iconPath = path.join(this._extensionPath,'images', 'dark', 'icon-branch.svg')
+    // if (element.branch === 'master') {
+      
+    //   // treeItem.contextValue = "file";
+    // }else{
+    //   treeItem.iconPath = this.getIcon(valueNode);
+    // }
     return treeItem;
   }
 }
