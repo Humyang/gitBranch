@@ -1,8 +1,8 @@
-import * as vscode from "vscode";
-import * as path from "path";
-import * as fs from "fs";
-import * as mkdirp from "mkdirp";
-import * as rimraf from "rimraf";
+import * as vscode from 'vscode';
+import * as path from 'path';
+import * as fs from 'fs';
+import * as mkdirp from 'mkdirp';
+import * as rimraf from 'rimraf';
 
 //#region Utilities
 // const fs_extra = require("../utils/fs-extra");
@@ -13,7 +13,7 @@ import * as rimraf from "rimraf";
 
 // const vscode_helpers = require("vscode-helpers");
 
-import { gitExec } from "./exec";
+import { gitExec } from './exec';
 
 namespace _ {
   function handleResult<T>(
@@ -30,19 +30,19 @@ namespace _ {
   }
 
   function massageError(error: Error & { code?: string }): Error {
-    if (error.code === "ENOENT") {
+    if (error.code === 'ENOENT') {
       return vscode.FileSystemError.FileNotFound();
     }
 
-    if (error.code === "EISDIR") {
+    if (error.code === 'EISDIR') {
       return vscode.FileSystemError.FileIsADirectory();
     }
 
-    if (error.code === "EEXIST") {
+    if (error.code === 'EEXIST') {
       return vscode.FileSystemError.FileExists();
     }
 
-    if (error.code === "EPERM" || error.code === "EACCESS") {
+    if (error.code === 'EPERM' || error.code === 'EACCESS') {
       return vscode.FileSystemError.NoPermissions();
     }
 
@@ -51,22 +51,22 @@ namespace _ {
 
   export function checkCancellation(token: vscode.CancellationToken): void {
     if (token.isCancellationRequested) {
-      throw new Error("Operation cancelled");
+      throw new Error('Operation cancelled');
     }
   }
 
   export function normalizeNFC(items: string): string;
   export function normalizeNFC(items: string[]): string[];
   export function normalizeNFC(items: string | string[]): string | string[] {
-    if (process.platform !== "darwin") {
+    if (process.platform !== 'darwin') {
       return items;
     }
 
     if (Array.isArray(items)) {
-      return items.map(item => item.normalize("NFC"));
+      return items.map(item => item.normalize('NFC'));
     }
 
-    return items.normalize("NFC");
+    return items.normalize('NFC');
   }
 
   export function readdir(path: string): Promise<string[]> {
@@ -175,7 +175,9 @@ export class FileStat implements vscode.FileStat {
 interface Entry {
   uri: vscode.Uri;
   type: vscode.FileType;
-  branch: String
+  branch: string;
+  isTop: Boolean;
+  isCurrent: Boolean;
 }
 
 //#endregion
@@ -211,7 +213,7 @@ export class FileSystemProvider
         this._onDidChangeFile.fire([
           {
             type:
-              event === "change"
+              event === 'change'
                 ? vscode.FileChangeType.Changed
                 : (await _.exists(filepath))
                 ? vscode.FileChangeType.Created
@@ -353,7 +355,7 @@ export class FileSystemProvider
 
     //   $write(`${allBranch.toString()}`);
     let branchList = filterStar.filter(s => {
-      if (s == "*") {
+      if (s == '*') {
         return false;
       } else {
         return true;
@@ -363,6 +365,24 @@ export class FileSystemProvider
     // } else {
     //   // no git client found
     // }
+  }
+  async currentBranch(): Promise<string> {
+    // let RES = await gitExec('rev-parse --abbrev-ref HEAD');
+    let RES = await gitExec(['rev-parse', '--abbrev-ref', 'HEAD']);
+    return RES.toString();
+    // let allBranchRaw = RES.toString();
+    // console.log('allBranchRaw', allBranchRaw);
+    // //   let res = allBranchRaw
+    // let filterStar = allBranchRaw.match(/\S+/g);
+    // console.log('filterStar', filterStar);
+    // let cB = filterStar.filter(s => {
+    //   if (s == '*') {
+    //     return true;
+    //   } else {
+    //     return false;
+    //   }
+    // });
+    // return cB;
   }
 
   setOjb(obj, branch, allBranch, arr) {
@@ -382,57 +402,82 @@ export class FileSystemProvider
       obj[e][branch] = true;
     });
   }
-  async getChildren(element?: Entry): Promise<Entry[]> {
-    // gitExec(['--version'])
-    // let allBranch = await this.commandWorker([]);
-
-    // console.log("allBranch",allBranch)
+  async getChildren(entryElement?: Entry): Promise<Entry[]> {
     let allBranch = await this.commandWorker([]);
 
-    // allBranch.forEach(item=>{
-      
     let obj = {};
     for (let index = 0; index < allBranch.length; index++) {
       const element = allBranch[index];
-      let master = await this.commandWorker(["--merged", element]);
-      
+      let master = await this.commandWorker(['--merged', element]);
+
       this.setOjb(obj, element, allBranch, master);
     }
-
-    // let obj = {};
-    // for (let index = 0; index < allBranch.length; index++) {
-    //   const element = allBranch[index];
-
-    //   this.setOjb(obj, element, allBranch, element);
-    // }
-    // })
-
-    // let master = await this.commandWorker(["--merged", "master"]);
-    // let pre_release = await this.commandWorker(["--merged", "pre_release"]);
-    // let produce = await this.commandWorker(["--merged", "produce"]);
-
-    // this.setOjb(obj, "pre_release", allBranch, pre_release);
-    // this.setOjb(obj, "produce", allBranch, produce);
-    // this.setOjb(obj, "master", allBranch, master);
-
+    let currentBranch = await this.currentBranch();
+    currentBranch = currentBranch.substring(0, currentBranch.length - 1);
     let arr = [];
+    let isTop = true;
+    if (entryElement) {
+      isTop = false;
+    }
+    // if (!element) {
     allBranch.forEach(element => {
-      let inBranch = "";
-      allBranch.forEach(v => {
-        if (obj[element] && obj[element][v] == true && v != element) {
-          inBranch = inBranch + " " + v + " ";
-        }
-      });
-      let status = "";
-      if (inBranch) {
-        status = `（${inBranch}）`;
+      let isCurrent = false;
+      if (element == currentBranch) {
+        isCurrent = true;
       }
-      arr.push({
-        uri: vscode.Uri.file(path.join("", `${element} ${status}`)),
-        type: vscode.FileType.File,
-        branch:element
-      });
+      if (entryElement) {
+        // allBranch.forEach(v => {
+        if (obj[entryElement.branch] && entryElement.branch != element) {
+          // inBranch = inBranch + ' ' + v + ' ';
+          let status = '';
+          if (obj[entryElement.branch][element] == true) {
+            status = '（Merged）';
+          }
+          arr.push({
+            uri: vscode.Uri.file(path.join('', `${element}${status}`)),
+            type: vscode.FileType.File,
+            branch: element,
+            isTop: isTop,
+            isCurrent: isCurrent
+          });
+        }
+        // });
+      } else {
+        arr.push({
+          uri: vscode.Uri.file(path.join('', `${element}`)),
+          type: vscode.FileType.Directory,
+          branch: element,
+          isTop: isTop,
+          isCurrent: isCurrent
+        });
+      }
     });
+    // }
+    // else {
+    //   allBranch.forEach(element => {
+    //     let isCurrent = false;
+    //     if (element == currentBranch) {
+    //       isCurrent = true;
+    //     }
+    //     let inBranch = '';
+    //     allBranch.forEach(v => {
+    //       if (obj[element] && obj[element][v] == true && v != element) {
+    //         inBranch = inBranch + ' ' + v + ' ';
+    //       }
+    //     });
+    //     // let status = '';
+    //     // if (inBranch) {
+    //     //   status = `（${inBranch}）`;
+    //     // }
+    //     arr.push({
+    //       uri: vscode.Uri.file(path.join('', `${element}`)),
+    //       type: vscode.FileType.File,
+    //       branch: element,
+    //       isTop: false,
+    //       isCurrent: isCurrent
+    //     });
+    //   });
+    // }
     return arr;
   }
 
@@ -443,18 +488,29 @@ export class FileSystemProvider
         ? vscode.TreeItemCollapsibleState.Collapsed
         : vscode.TreeItemCollapsibleState.None
     );
-    if (element.type === vscode.FileType.File) {
+    if (element.isTop === true) {
       treeItem.command = {
-        command: "gitBranch.openFile",
-        title: "Open File",
+        command: 'view-git-branch-merged.openFile',
+        title: 'Open File',
         arguments: [element.uri]
       };
-      treeItem.contextValue = "file";
+      treeItem.contextValue = 'file';
+      // console.log(element);
+      if (element.isCurrent == true) {
+        treeItem.label = '*' + element.branch;
+      } else {
+        treeItem.label = element.branch;
+      }
     }
-    
-    treeItem.iconPath = path.join(this._extensionPath,'images', 'dark', 'icon-branch.svg')
+
+    treeItem.iconPath = path.join(
+      this._extensionPath,
+      'images',
+      'dark',
+      'icon-branch.svg'
+    );
     // if (element.branch === 'master') {
-      
+
     //   // treeItem.contextValue = "file";
     // }else{
     //   treeItem.iconPath = this.getIcon(valueNode);
@@ -469,14 +525,14 @@ export class FileExplorer {
   constructor(context: vscode.ExtensionContext) {
     this.createTreeView(context);
     // this.extensionPath = context.extensionPath
-    vscode.commands.registerCommand("gitBranch.openFile", resource =>
+    vscode.commands.registerCommand('view-git-branch-merged.openFile', resource =>
       this.openResource(resource)
     );
   }
   public createTreeView(context: vscode.ExtensionContext) {
     const treeDataProvider = new FileSystemProvider(context.extensionPath);
 
-    vscode.window.createTreeView("gitBranch", { treeDataProvider });
+    vscode.window.createTreeView('view-git-branch-merged', { treeDataProvider });
   }
 
   private openResource(resource: vscode.Uri): void {

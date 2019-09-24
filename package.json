@@ -1,7 +1,7 @@
 {
-  "name": "git-branch",
+  "name": "view-git-branch-merged",
   "publisher": "humyang",
-  "displayName": "gitBranch",
+  "displayName": "view-git-branch-merged",
   "description": "",
   "version": "0.1.0",
   "engines": {
@@ -12,16 +12,16 @@
   ],
   "main": "./dist/extension.js",
   "activationEvents": [
-    "onView:gitBranch"
+    "onView:view-git-branch-merged"
   ],
   "contributes": {
     "commands": [
       {
-        "command": "gitBranch.refresh",
-        "title": "刷新"
+        "command": "view-git-branch-merged.refresh",
+        "title": "Refresh"
       },
       {
-        "command": "gitBranch.copyBranchName",
+        "command": "view-git-branch-merged.copyBranchName",
         "title": "Copy Name",
         "icon": {
           "dark": "images/dark/icon-copy-commit.svg",
@@ -29,7 +29,7 @@
         }
       },
       {
-        "command": "gitBranch.branchToMaster",
+        "command": "view-git-branch-merged.branchToMaster",
         "title": "Meger To Master",
         "icon": {
           "dark": "images/dark/icon-push.svg",
@@ -37,7 +37,7 @@
         }
       },
       {
-        "command": "gitBranch.masterToBranch",
+        "command": "view-git-branch-merged.masterToBranch",
         "title": "Meger From Master",
         "icon": {
           "dark": "images/dark/icon-pull.svg",
@@ -45,7 +45,7 @@
         }
       },
       {
-        "command": "gitBranch.checkoutToBranch",
+        "command": "view-git-branch-merged.checkoutToBranch",
         "title": "Checkout",
         "icon": {
           "dark": "images/dark/icon-checkout.svg",
@@ -53,7 +53,7 @@
         }
       },
       {
-        "command": "gitBranch.deleteBranch",
+        "command": "view-git-branch-merged.deleteBranch",
         "title": "DELETE",
         "icon": {
           "dark": "images/dark/icon-delete.svg",
@@ -61,7 +61,7 @@
         }
       },
       {
-        "command": "gitBranch.copyShaToClipboard",
+        "command": "view-git-branch-merged.copyShaToClipboard",
         "title": "Copy Commit ID to Clipboard",
         "icon": {
           "dark": "images/dark/icon-copy-commit.svg",
@@ -70,18 +70,18 @@
       }
     ],
     "views": {
-      "gitBranch": [
+      "view-git-branch-merged": [
         {
-          "id": "gitBranch",
-          "name": "视图名称"
+          "id": "view-git-branch-merged",
+          "name": "view-git-branch-merged"
         }
       ]
     },
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "gitBranch",
-          "title": "侧边栏名称",
+          "id": "view-git-branch-merged",
+          "title": "view-git-branch-merged",
           "icon": "media/dep.svg"
         }
       ]
@@ -89,35 +89,25 @@
     "menus": {
       "view/title": [
         {
-          "command": "gitBranch.refresh",
-          "when": "view == gitBranch",
+          "command": "view-git-branch-merged.refresh",
+          "when": "view == view-git-branch-merged",
           "group": "navigation"
         }
       ],
       "view/item/context": [
         {
-          "command": "gitBranch.copyBranchName",
-          "when": "view == gitBranch",
+          "command": "view-git-branch-merged.copyBranchName",
+          "when": "view == view-git-branch-merged",
           "group": "inline"
         },
         {
-          "command": "gitBranch.branchToMaster",
-          "when": "view == gitBranch",
+          "command": "view-git-branch-merged.branchToMaster",
+          "when": "view == view-git-branch-merged",
           "group": "inline"
         },
         {
-          "command": "gitBranch.masterToBranch",
-          "when": "view == gitBranch",
-          "group": "inline"
-        },
-        {
-          "command": "gitBranch.checkoutToBranch",
-          "when": "view == gitBranch",
-          "group": "inline"
-        },
-        {
-          "command": "gitBranch.deleteBranch",
-          "when": "view == gitBranch",
+          "command": "view-git-branch-merged.deleteBranch",
+          "when": "view == view-git-branch-merged",
           "group": "inline"
         }
       ]
