@@ -6,6 +6,7 @@
     "type": "git",
     "url": "https://github.com/Humyang/gitBranch.git"
   },
+  "icon": "images/merge.png",
   "description": "",
   "version": "0.1.4",
   "engines": {
