@@ -497,18 +497,23 @@ export class FileSystemProvider
       treeItem.contextValue = 'file';
       // console.log(element);
       if (element.isCurrent == true) {
-        treeItem.label = '*' + element.branch;
+        treeItem.label = element.branch;
+        treeItem.iconPath = path.join(
+          this._extensionPath,
+          'images',
+          'star_green.svg'
+        );
       } else {
         treeItem.label = element.branch;
+        treeItem.iconPath = path.join(
+          this._extensionPath,
+          'images',
+          'star_green.svg'
+        );
       }
     }
 
-    treeItem.iconPath = path.join(
-      this._extensionPath,
-      'images',
-      'dark',
-      'icon-branch.svg'
-    );
+    
     // if (element.branch === 'master') {
 
     //   // treeItem.contextValue = "file";
