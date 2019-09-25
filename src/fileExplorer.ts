@@ -513,7 +513,7 @@ export class FileSystemProvider
         treeItem.iconPath = path.join(
           this._extensionPath,
           'images',
-          'star_gray.svg'
+          'empty.svg'
         );
       }
     } else {

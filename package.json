@@ -24,48 +24,24 @@
         "command": "view-git-branch-merged.copyBranchName",
         "title": "Copy Name",
         "icon": {
-          "dark": "images/dark/icon-copy-commit.svg",
-          "light": "images/light/icon-copy-commit.svg"
+          "dark": "images/copy.svg",
+          "light": "images/copy.svg"
         }
       },
       {
         "command": "view-git-branch-merged.branchToMaster",
-        "title": "Meger To Master",
+        "title": "Meger",
         "icon": {
-          "dark": "images/dark/icon-push.svg",
-          "light": "images/light/icon-push.svg"
-        }
-      },
-      {
-        "command": "view-git-branch-merged.masterToBranch",
-        "title": "Meger From Master",
-        "icon": {
-          "dark": "images/dark/icon-pull.svg",
-          "light": "images/light/icon-pull.svg"
-        }
-      },
-      {
-        "command": "view-git-branch-merged.checkoutToBranch",
-        "title": "Checkout",
-        "icon": {
-          "dark": "images/dark/icon-checkout.svg",
-          "light": "images/light/icon-checkout.svg"
+          "dark": "images/merge16.svg",
+          "light": "images/merge16.svg"
         }
       },
       {
         "command": "view-git-branch-merged.deleteBranch",
         "title": "DELETE",
         "icon": {
-          "dark": "images/dark/icon-delete.svg",
-          "light": "images/light/icon-delete.svg"
-        }
-      },
-      {
-        "command": "view-git-branch-merged.copyShaToClipboard",
-        "title": "Copy Commit ID to Clipboard",
-        "icon": {
-          "dark": "images/dark/icon-copy-commit.svg",
-          "light": "images/light/icon-copy-commit.svg"
+          "dark": "images/material-delete.svg",
+          "light": "images/material-delete.svg"
         }
       }
     ],
