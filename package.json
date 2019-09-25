@@ -7,7 +7,7 @@
     "url": "https://github.com/Humyang/gitBranch.git"
   },
   "description": "",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "engines": {
     "vscode": "^1.32.0"
   },
