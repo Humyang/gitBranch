@@ -178,6 +178,8 @@ interface Entry {
   branch: string;
   isTop: Boolean;
   isCurrent: Boolean;
+
+  isMerged: Boolean;
 }
 
 //#endregion
@@ -430,15 +432,18 @@ export class FileSystemProvider
         if (obj[entryElement.branch] && entryElement.branch != element) {
           // inBranch = inBranch + ' ' + v + ' ';
           let status = '';
+          let isMerged = false;
           if (obj[entryElement.branch][element] == true) {
             status = '（Merged）';
+            isMerged = true;
           }
           arr.push({
             uri: vscode.Uri.file(path.join('', `${element}${status}`)),
             type: vscode.FileType.File,
             branch: element,
             isTop: isTop,
-            isCurrent: isCurrent
+            isCurrent: isCurrent,
+            isMerged: isMerged
           });
         }
         // });
@@ -508,12 +513,39 @@ export class FileSystemProvider
         treeItem.iconPath = path.join(
           this._extensionPath,
           'images',
-          'star_green.svg'
+          'star_gray.svg'
+        );
+      }
+    } else {
+      if (element.isMerged) {
+        treeItem.iconPath = path.join(
+          this._extensionPath,
+          'images',
+          'true.svg'
+        );
+      } else {
+        // treeItem.iconPath = false
+        treeItem.iconPath = path.join(
+          this._extensionPath,
+          'images',
+          'empty.svg'
         );
       }
     }
+    // if (element.isCurrent == true) {
+    //   treeItem.iconPath = path.join(
+    //     this._extensionPath,
+    //     'images',
+    //     'star_green.svg'
+    //   );
+    // } else {
+    //   treeItem.iconPath = path.join(
+    //     this._extensionPath,
+    //     'images',
+    //     'star_gray.svg'
+    //   );
+    // }
 
-    
     // if (element.branch === 'master') {
 
     //   // treeItem.contextValue = "file";
@@ -530,14 +562,17 @@ export class FileExplorer {
   constructor(context: vscode.ExtensionContext) {
     this.createTreeView(context);
     // this.extensionPath = context.extensionPath
-    vscode.commands.registerCommand('view-git-branch-merged.openFile', resource =>
-      this.openResource(resource)
+    vscode.commands.registerCommand(
+      'view-git-branch-merged.openFile',
+      resource => this.openResource(resource)
     );
   }
   public createTreeView(context: vscode.ExtensionContext) {
     const treeDataProvider = new FileSystemProvider(context.extensionPath);
 
-    vscode.window.createTreeView('view-git-branch-merged', { treeDataProvider });
+    vscode.window.createTreeView('view-git-branch-merged', {
+      treeDataProvider
+    });
   }
 
   private openResource(resource: vscode.Uri): void {

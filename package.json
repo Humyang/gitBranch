@@ -82,7 +82,7 @@
         {
           "id": "view-git-branch-merged",
           "title": "view-git-branch-merged",
-          "icon": "media/dep.svg"
+          "icon": "media/merge.svg"
         }
       ]
     },
