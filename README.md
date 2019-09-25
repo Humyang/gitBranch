@@ -1,3 +1,3 @@
 View merge status between branches.
 
-![](./screenshot.jpg)
+![](https://raw.githubusercontent.com/Humyang/gitBranch/master/screenshot.jpg)
