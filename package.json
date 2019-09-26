@@ -1,13 +1,18 @@
 {
-  "name": "view-git-branch-merged",
+  "name": "view-git-branch-merged-status",
   "publisher": "humyang",
-  "displayName": "view-git-branch-merged",
+  "displayName": "git branch merged status",
+  "description": "View merge status between branches.",
+  "keywords": [
+    "branch",
+    "git",
+    "merged"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/Humyang/gitBranch.git"
   },
   "icon": "images/merge.png",
-  "description": "",
   "version": "0.1.5",
   "engines": {
     "vscode": "^1.32.0"
@@ -62,7 +67,7 @@
       "activitybar": [
         {
           "id": "view-git-branch-merged",
-          "title": "view-git-branch-merged",
+          "title": "git branch merged status",
           "icon": "media/merge.svg"
         }
       ]
