@@ -40,7 +40,7 @@
       },
       {
         "command": "view-git-branch-merged.branchToMaster",
-        "title": "Meger",
+        "title": "Merge",
         "icon": {
           "dark": "images/merge16.svg",
           "light": "images/merge16.svg"
