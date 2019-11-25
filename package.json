@@ -13,7 +13,7 @@
     "url": "https://github.com/Humyang/gitBranch.git"
   },
   "icon": "images/merge.png",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "engines": {
     "vscode": "^1.32.0"
   },
