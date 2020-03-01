@@ -13,7 +13,7 @@ export const gitExec = async function(arg) {
   // git.
   let path = await git.git.path;
   let respositories = await git.repositories;
-  var preArgs = [`--git-dir=${respositories[0].rootUri.fsPath}/.git/`];
+  var preArgs = [`-C`, `${respositories[0].rootUri.fsPath}`];
   let c = preArgs;
   if (arg) {
     c = preArgs.concat(arg);
