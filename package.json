@@ -13,12 +13,12 @@
     "url": "https://github.com/Humyang/gitBranch.git"
   },
   "icon": "images/merge.png",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "engines": {
     "vscode": "^1.32.0"
   },
   "categories": [
-    "Other"
+    "SCM Providers"
   ],
   "main": "./dist/extension.js",
   "activationEvents": [
