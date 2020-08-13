@@ -6,10 +6,12 @@ import { GitExtension } from './git.d';
 // let gitExtension = null
 
 // let git = null
-const gitExtension = vscode.extensions.getExtension<GitExtension>('vscode.git')
-  .exports;
-const git = gitExtension.getAPI(1);
+
+
 export const gitExec = async function(arg) {
+  const gitExtension = vscode.extensions.getExtension<GitExtension>('vscode.git')
+  .exports;
+  const git = gitExtension.getAPI(1);
   // git.
   let path = await git.git.path;
   let respositories = await git.repositories;

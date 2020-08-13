@@ -25,10 +25,38 @@
     "onView:view-git-branch-merged"
   ],
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "view-git-branch-merged",
+          "title": "git branch merged status",
+          "icon": "media/merge.svg"
+        }
+      ]
+    },
+    "views": {
+      "view-git-branch-merged": [
+        {
+          "id": "view-git-branch-merged",
+          "name": "view-git-branch-merged"
+        },{
+          "id": "view-git-branch-merged2",
+          "name": "view-git-branch-merged2"
+        }
+      ]
+    },
     "commands": [
       {
         "command": "view-git-branch-merged.refresh",
         "title": "Refresh"
+      },
+      {
+        "command": "view-git-branch-merged.stash",
+        "title": "Stash"
+      },
+      {
+        "command": "view-git-branch-merged.stashPop",
+        "title": "StashPop"
       },
       {
         "command": "view-git-branch-merged.copyBranchName",
@@ -55,27 +83,20 @@
         }
       }
     ],
-    "views": {
-      "view-git-branch-merged": [
-        {
-          "id": "view-git-branch-merged",
-          "name": "view-git-branch-merged"
-        }
-      ]
-    },
-    "viewsContainers": {
-      "activitybar": [
-        {
-          "id": "view-git-branch-merged",
-          "title": "git branch merged status",
-          "icon": "media/merge.svg"
-        }
-      ]
-    },
     "menus": {
       "view/title": [
         {
           "command": "view-git-branch-merged.refresh",
+          "when": "view == view-git-branch-merged",
+          "group": "navigation"
+        },
+        {
+          "command": "view-git-branch-merged.stash",
+          "when": "view == view-git-branch-merged",
+          "group": "navigation"
+        },
+        {
+          "command": "view-git-branch-merged.stashPop",
           "when": "view == view-git-branch-merged",
           "group": "navigation"
         }
