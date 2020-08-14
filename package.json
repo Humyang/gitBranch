@@ -13,7 +13,7 @@
     "url": "https://github.com/Humyang/gitBranch.git"
   },
   "icon": "images/merge.png",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "engines": {
     "vscode": "^1.32.0"
   },
@@ -38,10 +38,10 @@
       "view-git-branch-merged": [
         {
           "id": "view-git-branch-merged",
-          "name": "view-git-branch-merged"
+          "name": "branch merged to ..."
         },{
           "id": "view-git-branch-merged2",
-          "name": "view-git-branch-merged2"
+          "name": "branch contain ..."
         }
       ]
     },
@@ -50,14 +50,7 @@
         "command": "view-git-branch-merged.refresh",
         "title": "Refresh"
       },
-      {
-        "command": "view-git-branch-merged.stash",
-        "title": "Stash"
-      },
-      {
-        "command": "view-git-branch-merged.stashPop",
-        "title": "StashPop"
-      },
+      
       {
         "command": "view-git-branch-merged.copyBranchName",
         "title": "Copy Name",
@@ -87,19 +80,9 @@
       "view/title": [
         {
           "command": "view-git-branch-merged.refresh",
-          "when": "view == view-git-branch-merged",
-          "group": "navigation"
-        },
-        {
-          "command": "view-git-branch-merged.stash",
-          "when": "view == view-git-branch-merged",
-          "group": "navigation"
-        },
-        {
-          "command": "view-git-branch-merged.stashPop",
-          "when": "view == view-git-branch-merged",
           "group": "navigation"
         }
+        
       ],
       "view/item/context": [
         {

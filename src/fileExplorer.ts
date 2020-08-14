@@ -423,17 +423,18 @@ export class FileSystemProvider
           let status = '';
           let isMerged = false;
           if (obj[entryElement.branch][element] == true) {
-            status = '（Merged）';
+            // status = '（Merged）';
             isMerged = true;
+            arr.push({
+              uri: vscode.Uri.file(path.join('', `${element}${status}`)),
+              type: vscode.FileType.File,
+              branch: element,
+              isTop: isTop,
+              isCurrent: isCurrent,
+              isMerged: isMerged
+            });
           }
-          arr.push({
-            uri: vscode.Uri.file(path.join('', `${element}${status}`)),
-            type: vscode.FileType.File,
-            branch: element,
-            isTop: isTop,
-            isCurrent: isCurrent,
-            isMerged: isMerged
-          });
+          
         }
         // });
       } else {
@@ -713,9 +714,9 @@ export class FileSystemProvider2
     let obj = {};
     for (let index = 0; index < allBranch.length; index++) {
       const element = allBranch[index];
-      let master = await this.commandWorker(['--merged', element]);
-
-      this.setOjb(obj, element, allBranch, master);
+      let current = await this.commandWorker(['--merged', element]);
+      obj[element] = current
+      // this.setOjb(obj, element, allBranch, current);
     }
     let currentBranch = await this.currentBranch();
     currentBranch = currentBranch.substring(0, currentBranch.length - 1);
@@ -724,33 +725,26 @@ export class FileSystemProvider2
     if (entryElement) {
       isTop = false;
     }
-    // if (!element) {
     allBranch.forEach(element => {
       let isCurrent = false;
       if (element == currentBranch) {
-        isCurrent = true;
-      }
-      if (entryElement) {
-        // allBranch.forEach(v => {
-        if (obj[entryElement.branch] && entryElement.branch != element) {
-          // inBranch = inBranch + ' ' + v + ' ';
-          let status = '';
-          let isMerged = false;
-          if (obj[entryElement.branch][element] == true) {
-            status = '（Merged）';
-            isMerged = true;
+            isCurrent = true;
           }
-          arr.push({
-            uri: vscode.Uri.file(path.join('', `${element}${status}`)),
-            type: vscode.FileType.File,
-            branch: element,
-            isTop: isTop,
-            isCurrent: isCurrent,
-            isMerged: isMerged
-          });
+    if (!isTop) {
+        if(entryElement.branch == element){
+          obj[entryElement.branch].forEach(v=>{
+            if(v!=entryElement.branch){
+              arr.push({
+                uri: vscode.Uri.file(path.join('', `${v}`)),
+                type: vscode.FileType.File,
+                branch: v,
+                isTop: isTop,
+                isMerged:true
+              });
+            }
+          })
         }
-        // });
-      } else {
+      }else {
         arr.push({
           uri: vscode.Uri.file(path.join('', `${element}`)),
           type: vscode.FileType.Directory,
@@ -759,7 +753,43 @@ export class FileSystemProvider2
           isCurrent: isCurrent
         });
       }
-    });
+    })
+    // allBranch.forEach(element => {
+    //   let isCurrent = false;
+    //   if (element == currentBranch) {
+    //     isCurrent = true;
+    //   }
+    //   if (!isTop) {
+    //     if (obj[entryElement.branch] && entryElement.branch != element) {
+    //       let status = '';
+    //       let isMerged = true;
+    //       if (obj[entryElement.branch][element] == true) {
+    //         status = '（Contaitn）';
+    //         isMerged = true;
+    //       }
+    //       console.log('objobj',obj)
+    //       obj[entryElement.branch].forEach(v=>{
+    //         arr.push({
+    //           uri: vscode.Uri.file(path.join('', `${element}${status}`)),
+    //           type: vscode.FileType.File,
+    //           branch: v,
+    //           isTop: isTop,
+    //           isCurrent: isCurrent,
+    //           isMerged: isMerged
+    //         });
+    //       })
+          
+    //     }
+    //   } else {
+    //     arr.push({
+    //       uri: vscode.Uri.file(path.join('', `${element}`)),
+    //       type: vscode.FileType.Directory,
+    //       branch: element,
+    //       isTop: isTop,
+    //       isCurrent: isCurrent
+    //     });
+    //   }
+    // });
     return arr;
   }
 

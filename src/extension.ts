@@ -19,22 +19,22 @@ export async function activate(context: vscode.ExtensionContext) {
         fileExplorer.createTreeView2(context)
       }
     ),
-    vscode.commands.registerCommand(
-      "view-git-branch-merged.stash",
-      async () => {
-        var t = vscode.window.createTerminal("view-git-branch-merged")
-        t.sendText(`git stash`,false)
-        t.show(true)
-      }
-    ),
-    vscode.commands.registerCommand(
-      "view-git-branch-merged.stashPop",
-      async () => {
-        var t = vscode.window.createTerminal("view-git-branch-merged")
-        t.sendText(`git stash pop`,false)
-        t.show(true)
-      }
-    ),
+    // vscode.commands.registerCommand(
+    //   "view-git-branch-merged.stash",
+    //   async () => {
+    //     var t = vscode.window.createTerminal("view-git-branch-merged")
+    //     t.sendText(`git stash`,false)
+    //     t.show(true)
+    //   }
+    // ),
+    // vscode.commands.registerCommand(
+    //   "view-git-branch-merged.stashPop",
+    //   async () => {
+    //     var t = vscode.window.createTerminal("view-git-branch-merged")
+    //     t.sendText(`git stash pop`,false)
+    //     t.show(true)
+    //   }
+    // ),
     vscode.commands.registerCommand(
       "view-git-branch-merged.copyBranchName",
       async (e,r) => {
