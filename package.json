@@ -68,6 +68,14 @@
         }
       },
       {
+        "command": "view-git-branch-merged.rebase",
+        "title": "Rebase",
+        "icon": {
+          "dark": "images/rebase.svg",
+          "light": "images/rebase.svg"
+        }
+      },
+      {
         "command": "view-git-branch-merged.deleteBranch",
         "title": "DELETE",
         "icon": {
@@ -86,17 +94,18 @@
       "view/item/context": [
         {
           "command": "view-git-branch-merged.copyBranchName",
-          "when": "view == view-git-branch-merged",
           "group": "inline"
         },
         {
           "command": "view-git-branch-merged.branchToMaster",
-          "when": "view == view-git-branch-merged",
+          "group": "inline"
+        },
+        {
+          "command": "view-git-branch-merged.rebase",
           "group": "inline"
         },
         {
           "command": "view-git-branch-merged.deleteBranch",
-          "when": "view == view-git-branch-merged",
           "group": "inline"
         }
       ]

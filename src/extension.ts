@@ -51,13 +51,21 @@ export async function activate(context: vscode.ExtensionContext) {
       }
     ),
     vscode.commands.registerCommand(
-      "view-git-branch-merged.masterToBranch",
+      "view-git-branch-merged.rebase",
       async (e) => {
         var t = vscode.window.createTerminal("view-git-branch-merged")
-        t.sendText(`git merge master`,false)
+        t.sendText(`git rebase ${e.branch}`,false)
         t.show(true)
       }
     ),
+    // vscode.commands.registerCommand(
+    //   "view-git-branch-merged.masterToBranch",
+    //   async (e) => {
+    //     var t = vscode.window.createTerminal("view-git-branch-merged")
+    //     t.sendText(`git merge master`,false)
+    //     t.show(true)
+    //   }
+    // ),
     vscode.commands.registerCommand(
       "view-git-branch-merged.checkoutToBranch",
       async (e) => {
