@@ -13,7 +13,7 @@
     "url": "https://github.com/Humyang/gitBranch.git"
   },
   "icon": "images/merge.png",
-  "version": "0.2.0",
+  "version": "0.1.15",
   "engines": {
     "vscode": "^1.32.0"
   },
@@ -39,8 +39,7 @@
         {
           "id": "view-git-branch-merged",
           "name": "branch merged to ..."
-        },
-        {
+        },{
           "id": "view-git-branch-merged2",
           "name": "branch contain ..."
         }
@@ -51,6 +50,7 @@
         "command": "view-git-branch-merged.refresh",
         "title": "Refresh"
       },
+      
       {
         "command": "view-git-branch-merged.copyBranchName",
         "title": "Copy Name",
@@ -82,6 +82,7 @@
           "command": "view-git-branch-merged.refresh",
           "group": "navigation"
         }
+        
       ],
       "view/item/context": [
         {
