@@ -94,19 +94,23 @@
       "view/item/context": [
         {
           "command": "view-git-branch-merged.copyBranchName",
-          "group": "inline"
+          "group": "inline",
+          "when": "view == view-git-branch-merged"
         },
         {
           "command": "view-git-branch-merged.branchToMaster",
-          "group": "inline"
+          "group": "inline",
+          "when": "view == view-git-branch-merged"
         },
         {
           "command": "view-git-branch-merged.rebase",
-          "group": "inline"
+          "group": "inline",
+          "when": "view == view-git-branch-merged"
         },
         {
           "command": "view-git-branch-merged.deleteBranch",
-          "group": "inline"
+          "group": "inline",
+          "when": "view == view-git-branch-merged"
         }
       ]
     }
